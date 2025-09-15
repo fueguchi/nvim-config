@@ -69,9 +69,8 @@
             plenary-nvim
             telescope-nvim
             bufferline-nvim
-            nvim-tree
             nvim-cmp
-            nvim-autopair
+            nvim-autopairs
             todo-comments-nvim
             nvim-treesitter
             trouble-nvim
@@ -80,7 +79,7 @@
             substitute-nvim
             snacks-nvim
             nvim-notify
-            cord-nvim
+            (cord-nvim.override { check = false; })
             conform-nvim
             indent-blankline-nvim
             nvim-ts-context-commentstring
