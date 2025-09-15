@@ -113,7 +113,7 @@
 
             configure = {
               customRC = ''
-                i just want to make my neovim plugins being managed by nix when using NixOS
+                " just want to make my neovim plugins being managed by nix when using NixOS
               '';
               
               packages.myPlugins = with pkgs.vimPlugins; {
