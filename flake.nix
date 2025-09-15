@@ -106,21 +106,9 @@
           
         in
         {
-          default = pkgs.neovim.override {
-            vimAlias = true;
+          plugins = plugins ++ [ vim-maximizer ];
 
-            configure = {
-              customRC = ''
-                " just want to make my neovim plugins being managed by nix when using NixOS
-              '';
-              
-              packages.myPlugins = with pkgs.vimPlugins; {
-                start = plugins ++ [ vim-maximizer ];
-              };
-
-              extraPackages = bins;
-            };
-          };
+          bins = bins;
         }
       );
     };
