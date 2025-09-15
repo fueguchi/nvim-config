@@ -120,7 +120,7 @@
                 start = plugins;
               };
 
-              extraPackages = nixpkgsPlugins ++ [ vim-maximizer ];
+              extraPackages = bins ++ [ vim-maximizer ];
             };
           };
         }
