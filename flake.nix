@@ -32,6 +32,7 @@
             gnumake
             fd
             fzf
+            lua
             ripgrep
             wget
             git
