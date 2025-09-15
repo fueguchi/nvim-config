@@ -117,10 +117,10 @@
               '';
               
               packages.myPlugins = with pkgs.vimPlugins; {
-                start = plugins;
+                start = plugins ++ [ vim-maximizer ];
               };
 
-              extraPackages = bins ++ [ vim-maximizer ];
+              extraPackages = bins;
             };
           };
         }
