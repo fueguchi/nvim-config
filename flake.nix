@@ -108,29 +108,21 @@
           
         in
         {
-          pkgs.warpNeovimUnstable pkgs.neovim-wrapped {
-            wrapRc = false;
+          default = pkgs.neovim.override {
+            vimAlias = true;
 
-            withNodeJs = true;
-            withPython3 = true;
+            configure = {
+              customRC = ''
+                " just want to make my neovim plugins being managed by nix when using NixOS
+              '';
+              
+              packages.myPlugins = with pkgs.vimPlugins; {
+                start = plugins;
+              };
 
-            wrapperArgs = ''--suffix PATH : "${pkgs.lib.makeBinPath bins ++ [ vim-maximizer ]}"''
-          }
-          #default = pkgs.neovim.override {
-          #  vimAlias = true;
-#
-          #  configure = {
-          #    customRC = ''
-          #      " just want to make my neovim plugins being managed by nix when using NixOS
-          #    '';
-          #    
-          #    packages.myPlugins = with pkgs.vimPlugins; {
-          #      start = plugins;
-          #    };
-#
-          #    extraPackages = nixpkgsPlugins ++ [ vim-maximizer ];
-          #  };
-          #};
+              extraPackages = nixpkgsPlugins ++ [ vim-maximizer ];
+            };
+          };
         }
       );
     };
