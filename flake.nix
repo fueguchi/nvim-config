@@ -26,7 +26,7 @@
             src = inputs.vim-maximizer;
           };
 
-          nixpkgsPlugins = with pkgs; [
+          bins = with pkgs; [
             # Tools
             tree-sitter
             gnumake
@@ -45,7 +45,7 @@
             # Language Tooling
             cargo
             texlive.combined.scheme-basic
-            lua54Packages.lua
+            #lua54Packages.lua
             
             # LSPs & Formatters
             nil # nix
@@ -108,21 +108,29 @@
           
         in
         {
-          default = pkgs.neovim.override {
-            vimAlias = true;
+          pkgs.warpNeovimUnstable pkgs.neovim-wrapped {
+            wrapRc = false;
 
-            configure = {
-              customRC = ''
-                " just want to make my neovim plugins being managed by nix when using NixOS
-              '';
-              
-              packages.myPlugins = with pkgs.vimPlugins; {
-                start = plugins;
-              };
+            withNodeJs = true;
+            withPython3 = true;
 
-              extraPackages = nixpkgsPlugins ++ [ vim-maximizer ];
-            };
-          };
+            wrapperArgs = ''--suffix PATH : "${pkgs.lib.makeBinPath bins ++ [ vim-maximizer ]}"''
+          }
+          #default = pkgs.neovim.override {
+          #  vimAlias = true;
+#
+          #  configure = {
+          #    customRC = ''
+          #      " just want to make my neovim plugins being managed by nix when using NixOS
+          #    '';
+          #    
+          #    packages.myPlugins = with pkgs.vimPlugins; {
+          #      start = plugins;
+          #    };
+#
+          #    extraPackages = nixpkgsPlugins ++ [ vim-maximizer ];
+          #  };
+          #};
         }
       );
     };
