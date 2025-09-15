@@ -109,7 +109,7 @@
           
         in
         {
-          default = pkgs.neovim-unwrapped.override {
+          default = pkgs.neovim.override {
             vimAlias = true;
 
             configure = {
