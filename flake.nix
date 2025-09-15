@@ -6,7 +6,6 @@
     
     vim-maximizer = {
       url = "github:szw/vim-maximizer";
-      inputs.nixpkgs.follow = "nixpkgs";
     };
 
   };
