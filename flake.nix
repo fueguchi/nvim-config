@@ -46,7 +46,7 @@
             # Language Tooling
             cargo
             texlive.combined.scheme-basic
-            #lua54Packages.lua
+            lua51Packages.lua
             
             # LSPs & Formatters
             nil # nix
@@ -109,7 +109,7 @@
           
         in
         {
-          default = pkgs.neovim.override {
+          default = pkgs.neovim-unwrapped.override {
             vimAlias = true;
 
             configure = {
