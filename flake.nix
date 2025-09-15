@@ -79,7 +79,9 @@
             substitute-nvim
             snacks-nvim
             nvim-notify
-            (cord-nvim.override { check = false; })
+            (cord-nvim.overrideAttrs (oldAttrs: {
+              passthru.tests.require-check.enable = false;
+            }))
             conform-nvim
             indent-blankline-nvim
             nvim-ts-context-commentstring
