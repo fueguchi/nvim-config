@@ -27,7 +27,6 @@
           };
 
           bins = with pkgs; [
-            # Tools
             tree-sitter
             gnumake
             fd
@@ -41,25 +40,23 @@
             sqlite
             imagemagick
             nodejs
-            gcc # for compiling tree-sitter parsers, etc.
+            gcc
             
-            # Language Tooling
             cargo
             texlive.combined.scheme-basic
             lua51Packages.lua
             
-            # LSPs & Formatters
-            nil # nix
+            nil 
             inputs.alejandra.defaultPackage.${system}
             
-            stylua # lua
+            stylua 
             lua-language-server
             
-            pyright # python
+            pyright 
             black
             isort
             
-            clang-tools # C/C++
+            clang-tools 
             glib
             python3
             mermaid-cli
