@@ -45,7 +45,7 @@
             # Language Tooling
             cargo
             texlive.combined.scheme-basic
-            (lua51.withPackages (ps: [ ps.lua ]))
+            lua51.withPackages
             
             # LSPs & Formatters
             nil # nix
