@@ -1,115 +1,127 @@
 {
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     alejandra.url = "github:kamadorueda/alejandra";
-    
+
     vim-maximizer = {
       url = "github:szw/vim-maximizer";
       flake = false;
     };
-
   };
 
-  outputs = { self, nixpkgs, ... } @inputs: 
-    let
-      supportedSystems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-    in {
-      packages = forAllSystems (system: 
-        let
-          pkgs = import nixpkgs { inherit system; };
-          
-          vim-maximizer = pkgs.vimUtils.buildVimPlugin {
-            pname = "vim-maximizer";
-            version = inputs.vim-maximizer.lastModifiedDate;
-            src = inputs.vim-maximizer;
-          };
+  outputs = {
+    self,
+    nixpkgs,
+    ...
+  } @ inputs: let
+    supportedSystems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
+    forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+  in {
+    packages = forAllSystems (
+      system: let
+        pkgs = import nixpkgs {inherit system;};
 
-          bins = with pkgs; [
-            tree-sitter
-            gnumake
-            fd
-            fzf
-            lua
-            ripgrep
-            wget
-            git
-            ghostscript
-            lazygit
-            sqlite
-            imagemagick
-            nodejs
-            gcc
-            
-            cargo
-            texlive.combined.scheme-basic
-            lua51Packages.lua
-            
-            nil 
-            inputs.alejandra.defaultPackage.${system}
-            
-            stylua 
-            lua-language-server
-            
-            pyright 
-            black
-            isort
-            
-            clang-tools 
-            glib
-            python3
-            mermaid-cli
-          ];
-          
-          plugins = with pkgs.vimPlugins; [
-            nvim-lspconfig
-            plenary-nvim
-            telescope-nvim
-            bufferline-nvim
-            nvim-cmp
-            nvim-autopairs
-            todo-comments-nvim
-            nvim-treesitter
-            trouble-nvim
-            which-key-nvim
-            nvim-surround
-            substitute-nvim
-            snacks-nvim
-            nvim-notify
-            (cord-nvim.overrideAttrs (oldAttrs: {
-              passthru.tests.require-check.enable = false;
-            }))
-            conform-nvim
-            indent-blankline-nvim
-            nvim-ts-context-commentstring
-            comment-nvim
-            alpha-nvim
-            vim-tmux-navigator
-            cmp-buffer
-            cmp-path
-            luasnip
-            cmp_luasnip
-            friendly-snippets
-            lspkind-nvim
-            nvim-tree-lua
-            telescope-fzf-native-nvim
-            nvim-ts-autotag
-            nvim-lspconfig
-            mason-nvim
-            mason-lspconfig-nvim
-            none-ls-nvim
-            cmp-nvim-lsp
-            neodev-nvim
-            nvim-lsp-file-operations
-          ];
-          
-        in
-        {
-          plugins = plugins ++ [ vim-maximizer ];
+        vim-maximizer = pkgs.vimUtils.buildVimPlugin {
+          pname = "vim-maximizer";
+          version = inputs.vim-maximizer.lastModifiedDate;
+          src = inputs.vim-maximizer;
+        };
 
-          bins = bins;
-        }
-      );
-    };
+        bins = with pkgs; [
+          tree-sitter
+          gnumake
+          fd
+          fzf
+          lua
+          ripgrep
+          wget
+          git
+          ghostscript
+          lazygit
+          sqlite
+          imagemagick
+          nodejs
+          gcc
+
+          kdePackages.qtdeclarative
+
+          cargo
+          texlive.combined.scheme-basic
+
+          nil
+          inputs.alejandra.defaultPackage.${system}
+
+          stylua
+          lua-language-server
+
+          pyright
+          black
+          isort
+
+          clang-tools
+          glib
+          python3
+          mermaid-cli
+        ];
+
+        plugins = with pkgs.vimPlugins; [
+          nvim-lspconfig
+          plenary-nvim
+          telescope-nvim
+          bufferline-nvim
+          nvim-cmp
+          nvim-autopairs
+          todo-comments-nvim
+          nvim-treesitter
+          trouble-nvim
+          which-key-nvim
+          nvim-surround
+          substitute-nvim
+          snacks-nvim
+          nvim-notify
+          (cord-nvim.overrideAttrs (oldAttrs: {
+            passthru.tests.require-check.enable = false;
+          }))
+          conform-nvim
+          indent-blankline-nvim
+          nvim-ts-context-commentstring
+          comment-nvim
+          alpha-nvim
+          vim-tmux-navigator
+          cmp-buffer
+          cmp-path
+          luasnip
+          cmp_luasnip
+          friendly-snippets
+          lspkind-nvim
+          nvim-tree-lua
+          telescope-fzf-native-nvim
+          nvim-ts-autotag
+          nvim-lspconfig
+          mason-nvim
+          mason-lspconfig-nvim
+          none-ls-nvim
+          cmp-nvim-lsp
+          neodev-nvim
+          nvim-lsp-file-operations
+        ];
+      in {
+        plugins = plugins ++ [vim-maximizer];
+        bins = bins;
+
+        default = pkgs.buildEnv {
+          name = "neovim-environment";
+          paths = bins ++ [pkgs.neovim];
+        };
+      }
+    );
+    apps = forAllSystems (system: {
+      default = {
+        type = "app";
+        program = "${self.packages.${system}.default}/bin/nvim";
+      };
+    });
+
+    defaultPackage = forAllSystems (system: self.packages.${system}.default);
+  };
 }
